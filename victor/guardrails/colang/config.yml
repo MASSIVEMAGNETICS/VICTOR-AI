@@ -1,0 +1,14 @@
+# Victor AI — NeMo Guardrails configuration
+# ============================================
+# This file configures the LLM used by the guardrail engine itself.
+# The guardrail LLM is separate from the main Victor compute router.
+
+models:
+  - type: main
+    engine: ollama
+    model: llama3
+    parameters:
+      base_url: "${OLLAMA_BASE_URL:-http://localhost:11434}"
+
+# Colang files to load (relative to this directory)
+# All *.co files in this directory are loaded automatically.
