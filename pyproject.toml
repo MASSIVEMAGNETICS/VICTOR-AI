@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "victor-ai"
+version = "1.0.0"
+description = "Victor — autonomous agentic AI system by Massive Magnetics / Ethica AI"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+authors = [
+    { name = "Massive Magnetics", email = "info@massivemagnetics.com" },
+]
+keywords = ["ai", "agent", "llm", "memory", "guardrails", "ethica"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "mem0ai>=0.1.98",
+    "litellm>=1.61.15",
+    "nemoguardrails>=0.10.1",
+    "websockets>=14.1",
+    "langgraph>=0.2.64",
+    "langchain-community>=0.3.27",
+    "langchain-core>=0.3.0",
+    "psycopg2-binary>=2.9.10",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-mock>=3.14.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["victor*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

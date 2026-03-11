@@ -1,0 +1,56 @@
+# Victor AI — Docker Compose
+#
+# Starts the local services that Victor depends on:
+#   - PostgreSQL with the pgvector extension (Mem0 backing store)
+#   - Home Assistant (Symbiotic Bridge)
+#
+# Usage:
+#   docker compose up -d
+#
+# Stop:
+#   docker compose down
+
+version: "3.9"
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL + pgvector  (Ego Core — persistent long-term memory)
+  # ---------------------------------------------------------------------------
+  pgvector:
+    image: pgvector/pgvector:pg16
+    container_name: victor_pgvector
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: victor
+      POSTGRES_USER: victor
+      POSTGRES_PASSWORD: "${PGVECTOR_PASSWORD:-changeme}"
+    volumes:
+      - pgvector_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U victor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # Home Assistant  (Symbiotic Bridge — environmental awareness)
+  # ---------------------------------------------------------------------------
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: homeassistant
+    privileged: true
+    restart: unless-stopped
+    environment:
+      TZ: "${HA_TIMEZONE:-America/New_York}"
+    volumes:
+      - ./ha_config:/config
+    network_mode: host
+    depends_on:
+      pgvector:
+        condition: service_healthy
+
+volumes:
+  pgvector_data:
